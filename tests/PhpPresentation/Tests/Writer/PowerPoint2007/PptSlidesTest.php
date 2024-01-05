@@ -250,6 +250,19 @@ class PptSlidesTest extends PhpPresentationTestCase
         $this->assertIsSchemaECMA376Valid();
     }
 
+    public function testDrawingCropping(): void
+    {
+        $oSlide = $this->oPresentation->getActiveSlide();
+        $oShape = $oSlide->createDrawingShape();
+        $oShape->setPath(PHPPRESENTATION_TESTS_BASE_DIR . '/resources/images/PhpPresentationLogo.png');
+        $oShape->setCrop(AutoShape::TYPE_OVAL);
+
+        $element = '/p:sld/p:cSld/p:spTree/p:pic/p:spPr/a:prstGeom';
+        $this->assertZipXmlElementExists('ppt/slides/slide1.xml', $element);
+        $this->assertZipXmlAttributeEquals('ppt/slides/slide1.xml', $element, 'prst', AutoShape::TYPE_OVAL);
+        $this->assertIsSchemaECMA376Valid();
+    }
+
     public function testDrawingShapeFill(): void
     {
         $oColor = new Color(Color::COLOR_DARKRED);

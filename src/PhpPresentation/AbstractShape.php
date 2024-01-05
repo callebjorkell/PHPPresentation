@@ -86,6 +86,13 @@ abstract class AbstractShape implements ComparableInterface
     protected $rotation;
 
     /**
+     * Crop shape
+     *
+     * @var string
+     */
+    protected $crop;
+
+    /**
      * Shadow.
      *
      * @var null|Shadow
@@ -299,6 +306,25 @@ abstract class AbstractShape implements ComparableInterface
     public function setRotation($pValue = 0)
     {
         $this->rotation = $pValue;
+
+        return $this;
+    }
+
+    public function getCrop()
+    {
+        return $this->crop;
+    }
+
+    /**
+     * Set the cropping shape
+     *
+     * @param string $pValue type of preset geometric shape to crop by
+     *
+     * @return $this
+     */
+    public function setCrop($pValue = "rect")
+    {
+        $this->crop = $pValue;
 
         return $this;
     }
