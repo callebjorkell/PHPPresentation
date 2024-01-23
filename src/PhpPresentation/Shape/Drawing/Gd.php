@@ -171,7 +171,7 @@ class Gd extends AbstractDrawingAdapter
 
     public function getIndexedFilename(): string
     {
-        return $this->uniqueName . $this->getImageIndex() . '.' . $this->getExtension();
+        return $this->getHashCode() . '.' . $this->getExtension();
     }
 
     /**
@@ -192,5 +192,14 @@ class Gd extends AbstractDrawingAdapter
         $this->path = $path;
 
         return $this;
+    }
+
+    /**
+     * Overridden hashCode to provide the same hashcode if the image resource is the exact same one.
+     * @return string
+     */
+    public function getHashCode(): string
+    {
+        return hash('sha256', $this->getContents());
     }
 }
