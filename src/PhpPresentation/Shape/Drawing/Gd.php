@@ -62,6 +62,12 @@ class Gd extends AbstractDrawingAdapter
     protected $uniqueName;
 
     /**
+     * Rendered content "cache" for the image. Reset if the
+     * @var
+     */
+    protected $content;
+
+    /**
      * Gd constructor.
      */
     public function __construct()
@@ -89,6 +95,7 @@ class Gd extends AbstractDrawingAdapter
      */
     public function setImageResource($value = null)
     {
+        $this->content = null;
         $this->imageResource = $value;
 
         if (null !== $this->imageResource) {
@@ -119,6 +126,11 @@ class Gd extends AbstractDrawingAdapter
      */
     public function setRenderingFunction($value = self::RENDERING_DEFAULT)
     {
+        if ($value === $this->renderingFunction) {
+            return $this;
+        }
+
+        $this->content = null;
         $this->renderingFunction = $value;
 
         return $this;
@@ -141,6 +153,10 @@ class Gd extends AbstractDrawingAdapter
      */
     public function setMimeType($value = self::MIMETYPE_DEFAULT)
     {
+        if ($this->mimeType === $value) {
+            return $this;
+        }
+        $this->content = null;
         $this->mimeType = $value;
 
         return $this;
@@ -148,6 +164,10 @@ class Gd extends AbstractDrawingAdapter
 
     public function getContents(): string
     {
+        if ($this->content !== null) {
+            return $this->content;
+        }
+
         ob_start();
         if (self::MIMETYPE_DEFAULT === $this->getMimeType()) {
             imagealphablending($this->getImageResource(), false);
@@ -157,7 +177,8 @@ class Gd extends AbstractDrawingAdapter
         $imageContents = ob_get_contents();
         ob_end_clean();
 
-        return $imageContents;
+        $this->content = $imageContents;
+        return $this->content;
     }
 
     public function getExtension(): string
